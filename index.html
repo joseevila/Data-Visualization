@@ -9,358 +9,469 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
 <style>
-:root{--bg:#f6f7f9;--card:#fff;--ink:#1b2333;--mut:#5d6778;--line:#e3e6eb;--acc:#2E5BBA;--accbg:#eaf0fb;--warn:#fff4dc;--warnink:#7a5200}
-@media (prefers-color-scheme:dark){:root{--bg:#12151b;--card:#1b2029;--ink:#e8ebf0;--mut:#9aa3b2;--line:#2c3340;--acc:#7da2f0;--accbg:#22304a;--warn:#3a2f17;--warnink:#f1cf86}}
+:root{--bg:#f6f7f9;--card:#fff;--ink:#1b2333;--mut:#5d6778;--line:#e3e6eb;--acc:#2E5BBA;--accbg:#eaf0fb;--ok:#1e7b34;--okbg:#e6f4ea;--bad:#a32d2d;--badbg:#fcebeb;--warn:#7a5200;--warnbg:#fff4dc}
+@media (prefers-color-scheme:dark){:root{--bg:#12151b;--card:#1b2029;--ink:#e8ebf0;--mut:#9aa3b2;--line:#2c3340;--acc:#7da2f0;--accbg:#22304a;--ok:#7fd49a;--okbg:#17321f;--bad:#f2a3a3;--badbg:#3a1d1d;--warn:#f1cf86;--warnbg:#3a2f17}}
 *{box-sizing:border-box}
 body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
-header{padding:18px 24px 10px;display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;justify-content:space-between}
+button,input,select,textarea{font:inherit;color:inherit}
+header{padding:16px 24px 8px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between}
 h1{font-size:20px;font-weight:600;margin:0}
-.presets{display:flex;flex-wrap:wrap;gap:8px;padding:12px 24px 4px}
-.presets button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 14px;font:inherit;cursor:pointer}
-.presets button:hover,.presets button.on{border-color:var(--acc);background:var(--accbg);color:var(--acc)}
-.wrap{display:grid;grid-template-columns:290px 1fr;gap:16px;padding:12px 24px 24px}
-@media (max-width:860px){.wrap{grid-template-columns:1fr}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
-.ctl{margin-bottom:14px}
-.ctl label.t{display:block;font-size:11.5px;font-weight:600;color:var(--mut);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
-select,input[type=range]{width:100%}
-select{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 8px}
-.seg{display:flex;flex-wrap:wrap;gap:4px}
-.seg button{flex:1 1 auto;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:6px 8px;font:inherit;font-size:12.5px;cursor:pointer}
-.seg button.on{background:var(--acc);border-color:var(--acc);color:#fff}
-.row{display:flex;gap:6px;align-items:center}
 .small{font-size:12px;color:var(--mut)}
+.pill{border-radius:999px;padding:3px 10px;font-size:12px;border:1px solid var(--line);background:var(--card)}
+.pill.ok{background:var(--okbg);color:var(--ok);border-color:transparent}.pill.warn{background:var(--warnbg);color:var(--warn);border-color:transparent}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:7px 12px;cursor:pointer}
+.btn:hover{border-color:var(--acc)}
+.btn.primary{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.link{background:none;border:none;color:var(--acc);cursor:pointer;padding:0;font-size:13px}
+.ctx{display:flex;flex-wrap:wrap;gap:8px;padding:4px 24px 10px;align-items:center}
+.chip{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 10px;font-size:12.5px;cursor:pointer;max-width:420px}
+.chip b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip .x{color:var(--mut);cursor:pointer}
+.tabs{display:flex;gap:4px;padding:0 24px}
+.tabs button{border:none;background:none;padding:10px 14px;border-bottom:2px solid transparent;cursor:pointer;color:var(--mut);font-weight:500}
+.tabs button.on{color:var(--ink);border-color:var(--acc)}
+.wrap{display:grid;grid-template-columns:280px 1fr;gap:16px;padding:12px 24px 32px}
+@media (max-width:900px){.wrap{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.ctl{margin-bottom:12px}
+.ctl>label.t,.t{display:block;font-size:11.5px;font-weight:600;color:var(--mut);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+select,input[type=text],input[type=number],input[type=date],input[type=password],textarea{width:100%;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 9px}
+textarea{min-height:80px;resize:vertical}
+.seg{display:flex;flex-wrap:wrap;gap:4px}
+.seg button{flex:1 1 auto;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:6px 8px;font-size:12.5px;cursor:pointer}
+.seg button.on{background:var(--acc);border-color:var(--acc);color:#fff}
 details{border:1px solid var(--line);border-radius:8px;margin-bottom:6px}
 summary{padding:7px 10px;cursor:pointer;font-size:13px;list-style:none;display:flex;justify-content:space-between}
 summary::-webkit-details-marker{display:none}
 details .opts{padding:4px 10px 8px;max-height:180px;overflow:auto}
 details .opts label{display:flex;gap:6px;align-items:center;font-size:13px;padding:2px 0}
 .badge{background:var(--accbg);color:var(--acc);border-radius:999px;padding:0 7px;font-size:11.5px}
-.linkbtn{background:none;border:none;color:var(--acc);font:inherit;font-size:12.5px;cursor:pointer;padding:0}
-.insight{font-size:14.5px;line-height:1.55;margin-bottom:12px}
-.insight b{font-weight:600}
-.chartbox{position:relative;height:440px}
-#grid{overflow:auto;max-height:460px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:16px}
+.kpi{border:1px solid var(--line);border-radius:12px;padding:14px;cursor:pointer;background:var(--card)}
+.kpi.on{border-color:var(--acc);box-shadow:0 0 0 2px var(--accbg)}
+.kpi .v{font-size:24px;font-weight:600;margin:4px 0}
+.kpi .l{font-size:12.5px;color:var(--mut)}
+.title{font-weight:600;font-size:15px}
+.insight{font-size:14.5px;line-height:1.55;margin:6px 0 12px}
+.chartbox{position:relative;height:400px}
 table{border-collapse:collapse;width:100%;font-size:13px}
 th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
-th:first-child,td:first-child{text-align:left}
-th{font-weight:600;color:var(--mut);font-size:12px;position:sticky;top:0;background:var(--card)}
-.drill{margin-top:14px;border-top:1px dashed var(--line);padding-top:12px;display:none}
-.drill.show{display:block}
-.kpis{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
-.kpi{border:1px solid var(--line);border-radius:10px;padding:8px 12px;min-width:120px}
-.kpi .v{font-size:18px;font-weight:600}
-.kpi .l{font-size:11.5px;color:var(--mut)}
-.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
-.title{font-weight:600;font-size:15px}
+th:first-child,td:first-child,th.l,td.l{text-align:left}
+th{font-weight:600;color:var(--mut);font-size:12px;background:var(--card)}
+tr.row{cursor:pointer}tr.row:hover td{background:var(--accbg)}tr.row.on td{background:var(--accbg);font-weight:500}
+.edited{border-bottom:2px dotted var(--acc)}
+.sel{margin-top:12px;border:1px solid var(--acc);border-radius:10px;padding:12px;background:var(--accbg)}
+.row2{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px 16px;margin:10px 0}
+.grid .f .k{font-size:11.5px;color:var(--mut)}.grid .f .val{font-weight:500}
+.cell{border:1px solid var(--line);border-radius:10px;padding:10px}
+.cell .k{font-size:11.5px;color:var(--mut)}.cell .val{font-size:17px;font-weight:600;margin:2px 0}
+.cell button{margin-top:4px}
+.audit li{margin:6px 0}
+.note{border-radius:8px;padding:10px 12px;margin:8px 0;font-size:13px}
+.note.warn{background:var(--warnbg);color:var(--warn)}.note.bad{background:var(--badbg);color:var(--bad)}.note.ok{background:var(--okbg);color:var(--ok)}
+.modal-bg{display:none;min-height:100vh;position:fixed;inset:0;background:rgba(0,0,0,.45);align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto;z-index:20}
+.modal-bg.show{display:flex}
+.modal{background:var(--card);border-radius:14px;max-width:720px;width:100%;padding:20px}
+.modal h2{font-size:17px;margin:0 0 4px;font-weight:600}
+pre.email{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;font-family:ui-monospace,Menlo,monospace;font-size:12.5px;max-height:320px;overflow:auto}
+.kv{display:grid;grid-template-columns:90px 1fr;gap:4px 10px;font-size:13px;margin:8px 0}
+.kv div:nth-child(odd){color:var(--mut)}
+.checks{list-style:none;padding:0}.checks li{padding:4px 0}.checks .y{color:var(--ok)}.checks .n{color:var(--bad)}
+.hide{display:none!important}
 </style>
 </head>
 <body>
 <header>
-  <h1>Startup Decision Maker</h1>
-  <span class="small">Simulated data · 3,000 startups · 6,000 decisions · 2,000 survey responses</span>
+  <div><h1>Startup Decision Maker</h1><div class="small" id="sub">Simulated data</div></div>
+  <div class="row2" style="gap:8px"><span class="pill" id="server">Checking server…</span><button class="btn" id="unlock">Unlock actions</button></div>
 </header>
-
-<div class="presets" id="presets"></div>
-
+<div class="ctx" id="ctx"></div>
+<nav class="tabs" id="tabs"></nav>
 <div class="wrap">
-  <aside class="card" id="controls">
-    <div class="ctl"><label class="t">Dataset</label><div class="seg" id="dsSeg"></div></div>
-    <div class="ctl"><label class="t" for="metric">Metric</label><select id="metric"></select></div>
-    <div class="ctl"><label class="t" for="group">Group by</label><select id="group"></select></div>
-    <div class="ctl"><label class="t" for="split">Split by</label><select id="split"></select>
-      <div class="row" style="margin-top:6px"><button class="linkbtn" id="swap">Swap group and split</button></div></div>
-    <div class="ctl"><label class="t">Chart</label><div class="seg" id="typeSeg"></div></div>
-    <div class="ctl"><label class="t">Sort</label><div class="seg" id="sortSeg"></div></div>
-    <div class="ctl"><label class="t" for="minN">Hide groups smaller than <span id="minNv"></span></label>
-      <input type="range" id="minN" min="0" max="200" step="10"></div>
-    <div class="ctl"><label class="t" for="topN">Show</label>
-      <select id="topN"><option value="0">All groups</option><option value="5">Top 5</option><option value="8">Top 8</option><option value="10">Top 10</option></select></div>
-    <div class="ctl"><label class="row small"><input type="checkbox" id="labels"> Value labels on chart</label>
-      <label class="row small"><input type="checkbox" id="overallLine"> Overall reference line</label></div>
-    <div class="ctl"><div class="row" style="justify-content:space-between"><label class="t" style="margin:0">Filters</label><button class="linkbtn" id="clear">Clear all</button></div>
-      <div id="filters" style="margin-top:6px"></div></div>
-  </aside>
-
-  <main class="card">
-    <div class="toolbar"><div class="title" id="title"></div><button class="linkbtn" id="copy">Copy view as text</button></div>
-    <div class="insight" id="insight"></div>
-    <div class="chartbox" id="chartbox"><canvas id="cv"></canvas></div>
-    <div id="grid" style="display:none"></div>
-    <div class="small" id="foot" style="margin-top:10px"></div>
-    <div class="drill" id="drill"></div>
-  </main>
+  <aside class="card" id="side"></aside>
+  <main class="card" id="main"></main>
 </div>
+<div class="modal-bg" id="mbg"><div class="modal" id="modal"></div></div>
 
-<script>
+<script type="module">
+import * as M from './lib/metrics.js';
 Chart.register(ChartDataLabels);
 const PAL=['#2E5BBA','#E07B39','#2A9D8F','#C44569','#8E7DBE','#D4A72C','#5C6B73','#6AB04C','#D35400','#3D5A80','#B5838D','#4D908E'];
-const ORD={stage:['Idea','Pre-seed','Seed','Series A','Series B+'],founder_age_band:['Under 25','25-34','35-44','45-54','55+'],age_band:['18-24','25-34','35-44','45-54','55+'],
-  choice_matched_signal:['Yes','Unclear','No'],survey_wave:['2025 wave','2026 wave'],raise_readiness:['Ready','Borderline','Not yet'],
-  primary_success_definition:['Sustainable revenue','Business sale','Early exit','IPO'],prior_founder_outcome:['First-time','Previously failed','Previously succeeded']};
-const DEFS=['Sustainable revenue','Business sale','Early exit','IPO'];
-
-const DS={
- startups:{label:'Startups',
-  dims:{sector:'Sector',stage:'Stage',funding_type:'Funding type',region:'Region',business_model:'Business model',founder_age_band:'Founder age',
-    prior_founder_outcome:'Prior founder outcome',cofounder_relationship:'Co-founders',uses_hypothesis_testing:'Tests hypotheses',
-    scaled_before_pmf:'Scaled before PMF',recommended_fix:'Recommended fix',pivot_signal:'Pivot signal',raise_readiness:'Raise readiness',founded_year:'Founded year'},
-  filters:['sector','stage','funding_type','region','founded_year'],
-  metrics:{
-   survival:{label:'36-month survival rate',type:'rate',num:r=>r.survived_36m,elig:r=>r.survived_36m!=null},
-   top10:{label:'Share reaching top 10%',type:'rate',num:r=>r.top10,elig:r=>r.top10!=null},
-   runway:{label:'Median runway (months)',type:'median',val:r=>r.runway_months,unit:' mo'},
-   pmf:{label:'Median PMF score (%)',type:'median',val:r=>r.pmf_score_pct,unit:'%'},
-   ltv:{label:'Median LTV / CAC',type:'median',val:r=>r.ltv_cac_ratio,unit:'x'},
-   growth:{label:'Average monthly growth (%)',type:'mean',val:r=>r.mom_growth_pct,unit:'%'},
-   churn:{label:'Average monthly churn (%)',type:'mean',val:r=>r.monthly_churn_pct,unit:'%'},
-   exp:{label:'Average industry experience (yrs)',type:'mean',val:r=>r.industry_experience_yrs,unit:' yrs'},
-   count:{label:'Number of startups',type:'count'},
-   funding:{label:'Total funding raised (USD M)',type:'sum',val:r=>r.funding_raised_usd/1e6,unit:'M'}}},
- decisions:{label:'Decisions',
-  dims:{decision_type:'Decision type',evidence_basis:'Evidence used',choice_matched_signal:'Choice matched signal',option_chosen:'Option chosen',
-    trigger:'Trigger',decision_year:'Decision year',sector:'Sector',stage:'Stage',funding_type:'Funding type',region:'Region',founder_age_band:'Founder age',round_sought:'Round sought'},
-  filters:['decision_type','sector','stage','funding_type','decision_year'],
-  metrics:{
-   payoff:{label:'Decision pay-off rate',type:'rate',num:r=>r.decision_paid_off,elig:()=>true},
-   raise:{label:'Raise close rate',type:'rate',num:r=>r.raise_closed,elig:r=>r.raise_attempt===1,note:'Only "Raise now" decisions count.'},
-   mrr:{label:'Average revenue change after 12 months (%)',type:'mean',val:r=>r.mrr_change_12m_pct,unit:'%'},
-   exps:{label:'Average experiments run before deciding',type:'mean',val:r=>r.experiments_run_before},
-   count:{label:'Number of decisions',type:'count'}}},
- survey:{label:'Success survey',
-  dims:{primary_success_definition:'Definition of success',survey_wave:'Survey wave',sector:'Sector',stage:'Stage',funding_type:'Funding type',
-    region:'Region',age_band:'Age band',founder_type:'Founder type'},
-  filters:['survey_wave','sector','stage','funding_type','region'],
-  metrics:{
-   mix:{label:'Definition mix (share of founders)',type:'mix'},
-   ipo:{label:'Share choosing IPO',type:'rate',num:r=>r.primary_success_definition==='IPO'?1:0,elig:()=>true},
-   rev:{label:'Share choosing sustainable revenue',type:'rate',num:r=>r.primary_success_definition==='Sustainable revenue'?1:0,elig:()=>true},
-   sell:{label:'Would sell today for USD 10M',type:'rate',num:r=>r.would_sell,elig:r=>r.would_sell!=null},
-   horizon:{label:'Average target horizon (years)',type:'mean',val:r=>r.target_horizon_years,unit:' yrs'},
-   conf:{label:'Average confidence of reaching it (%)',type:'mean',val:r=>r.confidence_of_reaching_it_pct,unit:'%'},
-   target:{label:'Median target value (USD M)',type:'median',val:r=>r.target_value_usd==null?null:r.target_value_usd/1e6,unit:'M'},
-   count:{label:'Number of respondents',type:'count'}}}
-};
-const TYPES=[['bar','Bars'],['hbar','Horizontal'],['line','Line'],['stacked','Stacked'],['heatmap','Heatmap'],['table','Table']];
+const $=(id)=>document.getElementById(id);
+const esc=(s)=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const VIEWS=[['overview','Overview'],['segment','Segment'],['record','Record']];
+const TYPES=[['bar','Bars'],['hbar','Horizontal'],['line','Line'],['stacked','Stacked'],['table','Table']];
 const SORTS=[['natural','Natural'],['desc','High → low'],['asc','Low → high']];
-const PRESETS=[
- {label:'What do I fix?',s:{ds:'startups',metric:'survival',group:'recommended_fix',split:'',type:'hbar',sort:'desc'}},
- {label:'Pivot or persist?',s:{ds:'decisions',metric:'payoff',group:'evidence_basis',split:'choice_matched_signal',type:'bar',sort:'desc'},f:{decision_type:['Pivot or persist?']}},
- {label:'Am I ready to raise?',s:{ds:'decisions',metric:'raise',group:'decision_year',split:'',type:'line',sort:'natural'}},
- {label:'Does age matter?',s:{ds:'startups',metric:'top10',group:'founder_age_band',split:'',type:'bar',sort:'natural',overall:true}},
- {label:'What counts as success?',s:{ds:'survey',metric:'mix',group:'funding_type',split:'primary_success_definition',type:'stacked',sort:'natural'}},
- {label:'Survival heatmap',s:{ds:'startups',metric:'survival',group:'sector',split:'stage',type:'heatmap',sort:'desc',minN:20}}
-];
 
-let ROWS={},state={ds:'startups',metric:'survival',group:'sector',split:'',type:'bar',sort:'desc',minN:0,topN:0,labels:true,overall:true},F={startups:{},decisions:{},survey:{}},chart=null,last=null;
-const $=id=>document.getElementById(id);
+// ---------- state: one object, preserved across views and reloads ----------
+const DEFAULT={view:'overview',ds:'startups',metric:'survival',group:'sector',split:'',type:'bar',sort:'desc',minN:0,topN:0,labels:true,filters:{},segment:null,record:null,page:0};
+let S={...DEFAULT};
+try{const h=location.hash.match(/^#v=(.+)$/);if(h)S={...DEFAULT,...JSON.parse(decodeURIComponent(h[1]))}}catch{}
+try{if(!location.hash){const s=sessionStorage.getItem('sdm-state');if(s)S={...DEFAULT,...JSON.parse(s)}}}catch{}
+function save(){const j=JSON.stringify(S);history.replaceState(null,'','#v='+encodeURIComponent(j));try{sessionStorage.setItem('sdm-state',j)}catch{}}
+function set(patch){S={...S,...patch};sanitize();save();render()}
 
-function decode(t){return t.rows.map(r=>{const o={};t.cats.forEach((c,i)=>o[c]=r[i]<0?null:t.dicts[c][r[i]]);t.nums.forEach((c,j)=>o[c]=r[t.cats.length+j]);return o})}
+let BASE=null,DATA=null,SRV={ok:false},PASS='',chart=null,AUDIT=null;
+try{PASS=sessionStorage.getItem('sdm-pass')||''}catch{}
 
-fetch('data.json').then(r=>r.json()).then(d=>{
-  ROWS.startups=decode(d.S);ROWS.decisions=decode(d.D);ROWS.survey=decode(d.Q);
-  buildStatic();syncControls();draw();
-}).catch(e=>{$('insight').textContent='Could not load data.json: '+e});
-
-function seg(el,items,key,onPick){el.innerHTML='';items.forEach(([v,l])=>{const b=document.createElement('button');b.textContent=l;b.dataset.v=v;b.onclick=()=>{onPick(v)};el.appendChild(b)})}
-function markSeg(el,v){[...el.children].forEach(b=>b.classList.toggle('on',b.dataset.v===v))}
-
-function buildStatic(){
-  seg($('dsSeg'),Object.entries(DS).map(([k,v])=>[k,v.label]),'ds',v=>{const keep=state.ds===v;state.ds=v;if(!keep){const d=DS[v];state.metric=Object.keys(d.metrics)[0];state.group=Object.keys(d.dims)[0];state.split='';if(state.metric==='mix'){state.split='primary_success_definition';state.type='stacked'}}clearPreset();syncControls();draw()});
-  seg($('typeSeg'),TYPES,'type',v=>{state.type=v;clearPreset();syncControls();draw()});
-  seg($('sortSeg'),SORTS,'sort',v=>{state.sort=v;clearPreset();syncControls();draw()});
-  const p=$('presets');PRESETS.forEach((pr,i)=>{const b=document.createElement('button');b.textContent=pr.label;b.onclick=()=>applyPreset(i);p.appendChild(b)});
-  $('metric').onchange=e=>{state.metric=e.target.value;if(state.metric==='mix'){state.split='primary_success_definition';if(!['stacked','heatmap','table'].includes(state.type))state.type='stacked'}clearPreset();syncControls();draw()};
-  $('group').onchange=e=>{state.group=e.target.value;if(state.split===state.group)state.split='';clearPreset();draw()};
-  $('split').onchange=e=>{state.split=e.target.value;clearPreset();draw()};
-  $('swap').onclick=()=>{if(!state.split)return;[state.group,state.split]=[state.split,state.group];clearPreset();syncControls();draw()};
-  $('minN').oninput=e=>{state.minN=+e.target.value;$('minNv').textContent=state.minN;draw()};
-  $('topN').onchange=e=>{state.topN=+e.target.value;draw()};
-  $('labels').onchange=e=>{state.labels=e.target.checked;draw()};
-  $('overallLine').onchange=e=>{state.overall=e.target.checked;draw()};
-  $('clear').onclick=()=>{F[state.ds]={};clearPreset();buildFilters();draw()};
-  $('copy').onclick=copyView;
+function sanitize(){
+  if(!M.DS[S.ds])S.ds='startups';
+  const d=M.DS[S.ds];
+  if(!d.metrics[S.metric])S.metric=Object.keys(d.metrics)[0];
+  if(!d.dims[S.group])S.group=Object.keys(d.dims)[0];
+  if(S.split&&!d.dims[S.split])S.split='';
+  if(S.metric==='mix')S.split='primary_success_definition';
+  if(S.split===S.group)S.split='';
+  if(S.segment&&(S.segment.ds!==S.ds||S.segment.group!==S.group))S.segment=null;
+  if(S.record&&M.recordIndex(S.record)<0)S.record=null;
 }
-function clearPreset(){[...$('presets').children].forEach(b=>b.classList.remove('on'))}
-function applyPreset(i){
-  const p=PRESETS[i];state=Object.assign(state,{split:'',minN:0,topN:0,overall:false},p.s);
-  F[state.ds]={};if(p.f)for(const[k,v]of Object.entries(p.f))F[state.ds][k]=new Set(v);
-  syncControls();draw();[...$('presets').children].forEach((b,j)=>b.classList.toggle('on',j===i));
+
+// ---------- server ----------
+async function api(path,{method='GET',body}={}){
+  const r=await fetch('/api/'+path,{method,headers:{'Content-Type':'application/json',...(PASS?{'x-dashboard-passcode':PASS}:{})},body:body?JSON.stringify(body):undefined});
+  let j={};try{j=await r.json()}catch{}
+  return{status:r.status,...j};
 }
-function syncControls(){
-  const d=DS[state.ds];
-  markSeg($('dsSeg'),state.ds);markSeg($('typeSeg'),state.type);markSeg($('sortSeg'),state.sort);
-  $('metric').innerHTML=Object.entries(d.metrics).map(([k,m])=>`<option value="${k}">${m.label}</option>`).join('');$('metric').value=state.metric;
-  const dimOpts=Object.entries(d.dims).map(([k,l])=>`<option value="${k}">${l}</option>`).join('');
-  $('group').innerHTML=dimOpts;$('group').value=state.group;
-  $('split').innerHTML='<option value="">None</option>'+dimOpts;$('split').value=state.split;
-  $('split').disabled=state.metric==='mix';
-  $('minN').value=state.minN;$('minNv').textContent=state.minN;$('topN').value=state.topN;
-  $('labels').checked=state.labels;$('overallLine').checked=state.overall;
-  buildFilters();
+async function loadServer(){
+  try{
+    const c=await api('context');
+    if(c.status!==200)throw new Error();
+    SRV={ok:true,...c};
+  }catch{SRV={ok:false}}
+  if(SRV.ok&&SRV.dataset_version!==BASE.version)SRV.staleBundle=true;
+  if(SRV.ok&&SRV.configured&&SRV.configured.storage){
+    const e=await api('edits');
+    if(e.status===200)DATA=M.applyEdits(BASE,e.edits);
+  }
+  serverPill();
 }
-function buildFilters(){
-  const d=DS[state.ds],box=$('filters');box.innerHTML='';
+function actionsReady(kind){
+  if(!SRV.ok)return'The server is not reachable, so actions are read-only.';
+  if(SRV.staleBundle)return'The page is on an older dataset than the server. Reload the page.';
+  if(!SRV.configured.storage)return'Actions are off until these server settings are added: '+SRV.configured.missing.join(', ')+'.';
+  if(!SRV.versions_match)return`Supabase is on dataset ${SRV.supabase_version||'(none)'} but this page is ${BASE.version}. Apply supabase/seed.sql first.`;
+  if(kind==='email'&&!SRV.configured.email)return'Email is off until these server settings are added: '+SRV.configured.missing.join(', ')+'.';
+  if(!SRV.authed)return'Unlock actions with the dashboard passcode first.';
+  return null;
+}
+function serverPill(){
+  const p=$('server');
+  const blocker=actionsReady('email');
+  if(!blocker){p.className='pill ok';p.textContent='Actions ready'}
+  else if(SRV.ok&&!SRV.authed&&SRV.configured&&SRV.configured.storage&&SRV.versions_match){p.className='pill';p.textContent='Locked'}
+  else{p.className='pill warn';p.textContent='Read-only';p.title=blocker}
+  $('unlock').textContent=SRV.authed?'Lock':'Unlock actions';
+}
+$('unlock').onclick=()=>{
+  if(SRV.authed){PASS='';try{sessionStorage.removeItem('sdm-pass')}catch{};loadServer().then(render);return}
+  openModal(`<h2>Unlock actions</h2><p class="small">Sharing, assigning, editing and reporting need the dashboard passcode. It is checked on the server and kept only in this browser tab.</p>
+    <input type="password" id="pc" placeholder="Passcode" autocomplete="current-password"><div id="pcerr"></div>
+    <div class="row2" style="margin-top:12px;justify-content:flex-end"><button class="btn" data-close>Cancel</button><button class="btn primary" id="pcgo">Unlock</button></div>`);
+  const go=async()=>{PASS=$('pc').value;await loadServer();if(SRV.authed){try{sessionStorage.setItem('sdm-pass',PASS)}catch{};closeModal();render()}else{$('pcerr').innerHTML=`<div class="note bad">${SRV.ok?'Wrong passcode.':'Server not reachable.'}</div>`}};
+  $('pcgo').onclick=go;$('pc').onkeydown=e=>{if(e.key==='Enter')go()};$('pc').focus();
+};
+
+// ---------- shell ----------
+function render(){
+  if(!DATA)return;
+  $('sub').textContent=`Simulated data · dataset ${BASE.version} · ${BASE.counts.startups.toLocaleString()} startups · ${BASE.counts.decisions.toLocaleString()} decisions · ${BASE.counts.survey.toLocaleString()} survey responses`;
+  $('tabs').innerHTML=VIEWS.map(([k,l])=>`<button data-v="${k}" class="${S.view===k?'on':''}">${l}</button>`).join('');
+  $('tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>set({view:b.dataset.v}));
+  renderContext();renderSide();
+  if(chart){chart.destroy();chart=null}
+  ({overview:renderOverview,segment:renderSegment,record:renderRecord})[S.view]();
+}
+function renderContext(){
+  const d=M.DS[S.ds],m=d.metrics[S.metric];
+  const nf=Object.values(S.filters).filter(v=>v&&v.length).length;
+  const chips=[`<span class="chip" data-go="overview">Metric <b>${esc(m.label)}</b> <span class="small">${esc(d.label)}</span></span>`,
+    `<span class="chip" data-go="segment">Filters <b>${nf?esc(M.describeFilters(S.ds,S.filters)):'none'}</b>${nf?'<span class="x" data-clear="filters">✕</span>':''}</span>`];
+  if(S.segment)chips.push(`<span class="chip" data-go="segment">Segment <b>${esc(M.describeSegment(S.ds,S.segment))}</b><span class="x" data-clear="segment">✕</span></span>`);
+  if(S.record)chips.push(`<span class="chip" data-go="record">Record <b>${esc(S.record)}</b><span class="x" data-clear="record">✕</span></span>`);
+  $('ctx').innerHTML=chips.join('');
+  $('ctx').querySelectorAll('[data-go]').forEach(c=>c.onclick=e=>{if(e.target.dataset.clear)return;set({view:c.dataset.go})});
+  $('ctx').querySelectorAll('[data-clear]').forEach(x=>x.onclick=()=>set(x.dataset.clear==='filters'?{filters:{},segment:null,page:0}:{[x.dataset.clear]:null}));
+}
+function segBtns(items,val,key){return`<div class="seg">${items.map(([v,l])=>`<button data-k="${key}" data-v="${v}" class="${String(val)===String(v)?'on':''}">${l}</button>`).join('')}</div>`}
+function renderSide(){
+  const d=M.DS[S.ds];
+  const dimOpts=(sel,none)=>(none?'<option value="">None</option>':'')+Object.entries(d.dims).map(([k,l])=>`<option value="${k}" ${sel===k?'selected':''}>${l}</option>`).join('');
+  let h=`<div class="ctl"><label class="t">Dataset</label>${segBtns(Object.entries(M.DS).map(([k,v])=>[k,v.label]),S.ds,'ds')}</div>
+    <div class="ctl"><label class="t" for="metric">Metric</label><select id="metric">${Object.entries(d.metrics).map(([k,m])=>`<option value="${k}" ${S.metric===k?'selected':''}>${m.label}</option>`).join('')}</select></div>`;
+  if(S.view==='segment'){
+    h+=`<div class="ctl"><label class="t" for="group">Group by</label><select id="group">${dimOpts(S.group)}</select></div>
+      <div class="ctl"><label class="t" for="split">Split by</label><select id="split" ${S.metric==='mix'?'disabled':''}>${dimOpts(S.split,true)}</select>
+        <button class="link" id="swap" style="margin-top:6px">Swap group and split</button></div>
+      <div class="ctl"><label class="t">Chart</label>${segBtns(TYPES,S.type,'type')}</div>
+      <div class="ctl"><label class="t">Sort</label>${segBtns(SORTS,S.sort,'sort')}</div>
+      <div class="ctl"><label class="t" for="minN">Hide groups smaller than ${S.minN}</label><input type="range" id="minN" min="0" max="200" step="10" value="${S.minN}" style="width:100%"></div>
+      <div class="ctl"><label class="small"><input type="checkbox" id="labels" ${S.labels?'checked':''}> Value labels</label></div>`;
+  }
+  h+=`<div class="ctl"><div class="row2"><label class="t" style="margin:0">Filters</label><button class="link" id="clearf">Clear</button></div><div id="filters" style="margin-top:6px"></div></div>`;
+  $('side').innerHTML=h;
+  $('side').querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{const k=b.dataset.k,v=b.dataset.v;
+    if(k==='ds'){const dd=M.DS[v];set({ds:v,metric:dd.metrics[S.metric]?S.metric:Object.keys(dd.metrics)[0],group:dd.dims[S.group]?S.group:Object.keys(dd.dims)[0],segment:null,page:0})}else set({[k]:v})});
+  $('metric').onchange=e=>set({metric:e.target.value});
+  if(S.view==='segment'){
+    $('group').onchange=e=>set({group:e.target.value,segment:null});
+    $('split').onchange=e=>set({split:e.target.value,segment:null});
+    $('swap').onclick=()=>{if(S.split)set({group:S.split,split:S.group,segment:null})};
+    $('minN').onchange=e=>set({minN:+e.target.value});
+    $('labels').onchange=e=>set({labels:e.target.checked});
+  }
+  $('clearf').onclick=()=>set({filters:{},segment:null,page:0});
+  const box=$('filters');
   d.filters.forEach(dim=>{
-    const vals=order(dim,[...new Set(ROWS[state.ds].map(r=>r[dim]).filter(v=>v!=null))]);
-    const sel=F[state.ds][dim]||new Set();
+    const vals=M.order(dim,[...new Set(DATA[S.ds].map(r=>r[dim]).filter(v=>v!=null))]);
+    const sel=new Set(S.filters[dim]||[]);
     const det=document.createElement('details');
-    det.innerHTML=`<summary><span>${d.dims[dim]}</span>${sel.size?`<span class="badge">${sel.size}</span>`:'<span class="small">All</span>'}</summary><div class="opts"></div>`;
-    const opts=det.querySelector('.opts');
-    vals.forEach(v=>{const l=document.createElement('label');l.innerHTML=`<input type="checkbox" ${sel.has(v)?'checked':''}> ${v}`;
-      l.querySelector('input').onchange=e=>{const s=F[state.ds][dim]||new Set();e.target.checked?s.add(v):s.delete(v);F[state.ds][dim]=s;
-        det.querySelector('summary').lastChild.outerHTML=s.size?`<span class="badge">${s.size}</span>`:'<span class="small">All</span>';clearPreset();draw()};
-      opts.appendChild(l)});
+    det.innerHTML=`<summary><span>${d.dims[dim]}</span>${sel.size?`<span class="badge">${sel.size}</span>`:'<span class="small">All</span>'}</summary><div class="opts">${vals.map(v=>`<label><input type="checkbox" value="${esc(v)}" ${sel.has(String(v))?'checked':''}> ${esc(v)}</label>`).join('')}</div>`;
+    det.querySelectorAll('input').forEach(i=>i.onchange=()=>{const cur=new Set(S.filters[dim]||[]);i.checked?cur.add(i.value):cur.delete(i.value);
+      const f={...S.filters};if(cur.size)f[dim]=[...cur];else delete f[dim];set({filters:f,page:0,segment:S.segment&&S.segment.group===dim?null:S.segment})});
     box.appendChild(det);
   });
 }
-function order(dim,vals){
-  if(ORD[dim])return ORD[dim].filter(v=>vals.includes(v)).concat(vals.filter(v=>!ORD[dim].includes(v)).sort());
-  return vals.sort((a,b)=>String(a).localeCompare(String(b),undefined,{numeric:true}));
-}
-function filtered(){
-  const f=F[state.ds];return ROWS[state.ds].filter(r=>Object.entries(f).every(([k,s])=>!s.size||s.has(r[k])));
-}
-function stat(list,m){
-  if(m.type==='count'||m.type==='mix')return{v:list.length,n:list.length};
-  if(m.type==='rate'){const e=list.filter(m.elig);const num=e.reduce((a,r)=>a+(m.num(r)||0),0);return{v:e.length?num/e.length:null,n:e.length,num,den:e.length,excluded:list.length-e.length}}
-  const vals=list.map(m.val).filter(v=>v!=null&&!isNaN(v));
-  if(m.type==='mean')return{v:vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null,n:vals.length};
-  if(m.type==='sum')return{v:vals.reduce((a,b)=>a+b,0),n:list.length};
-  vals.sort((a,b)=>a-b);const k=vals.length;return{v:k?(k%2?vals[(k-1)/2]:(vals[k/2-1]+vals[k/2])/2):null,n:k};
-}
-function groupBy(list,dim){const m=new Map();list.forEach(r=>{const k=r[dim]==null?'(blank)':r[dim];if(!m.has(k))m.set(k,[]);m.get(k).push(r)});return m}
 
-function compute(){
-  const d=DS[state.ds],m=d.metrics[state.metric],rows=filtered();
-  const overall=stat(rows,m);
-  const g=groupBy(rows,state.group);
-  let cats=order(state.group,[...g.keys()]);
-  const gt=new Map(cats.map(c=>[c,stat(g.get(c),m)]));
-  cats=cats.filter(c=>(gt.get(c).n||0)>=state.minN);
-  const sortVal=c=>{const v=gt.get(c).v;return v==null?-Infinity:v};
-  if(m.type==='mix'){/* sort by share choosing first split value */}
-  if(state.sort==='desc')cats.sort((a,b)=>sortVal(b)-sortVal(a));
-  if(state.sort==='asc')cats.sort((a,b)=>sortVal(a)-sortVal(b));
-  if(state.topN)cats=cats.slice(0,state.topN);
-  let series;
-  if(!state.split){series=[{name:m.label,stats:cats.map(c=>gt.get(c))}]}
-  else{
-    const sv=order(state.split,[...new Set(rows.map(r=>r[state.split]==null?'(blank)':r[state.split]))]);
-    series=sv.map(s=>({name:s,stats:cats.map(c=>{const sub=g.get(c).filter(r=>(r[state.split]==null?'(blank)':r[state.split])===s);
-      if(m.type==='mix'){const tot=g.get(c).length;return{v:tot?sub.length/tot:null,n:sub.length,num:sub.length,den:tot}}
-      const st=stat(sub,m);if(state.minN>0&&(st.n||0)<state.minN)return{v:null,n:st.n,small:true};return st})}));
-  }
-  return{d,m,rows,overall,cats,gt,series};
-}
-const isPct=m=>m.type==='rate'||m.type==='mix';
-function fmt(m,v){if(v==null)return m.type==='rate'?'n/a':'–';if(isPct(m))return(v*100).toFixed(1)+'%';if(m.type==='count')return Math.round(v).toLocaleString();
-  const u=m.unit||'';return(u==='M'?'USD '+v.toLocaleString(undefined,{maximumFractionDigits:1})+'M':v.toFixed(1)+u)}
-function plotVal(m,v){return v==null?null:(isPct(m)?+(v*100).toFixed(2):+v.toFixed(2))}
-
-function draw(){
-  if(!ROWS.startups)return;
-  const r=compute();last=r;const{d,m,overall,cats,series,gt}=r;
-  $('title').textContent=`${m.label} by ${d.dims[state.group].toLowerCase()}${state.split?' and '+d.dims[state.split].toLowerCase():''}`;
-  insight(r);foot(r);$('drill').classList.remove('show');
-  const tabular=state.type==='heatmap'||state.type==='table';
-  $('chartbox').style.display=tabular?'none':'block';$('grid').style.display=tabular?'block':'none';
-  if(chart){chart.destroy();chart=null}
-  if(tabular){renderGrid(r);return}
-  const horiz=state.type==='hbar',stacked=state.type==='stacked'||m.type==='mix'&&state.type!=='line';
-  const single=series.length===1;
-  const datasets=series.map((s,i)=>{const c=single?PAL[0]:PAL[i%PAL.length];
-    return{label:s.name,data:s.stats.map(st=>plotVal(m,st.v)),_stats:s.stats,backgroundColor:state.type==='line'?c:c+'D9',borderColor:c,borderWidth:state.type==='line'?2.5:0,
-      borderRadius:state.type==='line'?0:4,tension:.25,pointRadius:state.type==='line'?4:0,spanGaps:true,
-      type:state.type==='line'?'line':'bar',order:2}});
-  if(state.overall&&overall.v!=null&&m.type!=='mix'&&m.type!=='count'&&m.type!=='sum'&&!stacked){
-    datasets.push({label:'Overall',type:'line',data:cats.map(()=>plotVal(m,overall.v)),borderColor:'#888',borderDash:[6,5],borderWidth:1.5,pointRadius:0,order:1,datalabels:{display:false},_stats:cats.map(()=>overall),
-      ...(horiz?{indexAxis:'y'}:{})});
-  }
-  const ink=getComputedStyle(document.body).color,line=getComputedStyle(document.documentElement).getPropertyValue('--line').trim()||'#ddd';
-  chart=new Chart($('cv'),{type:'bar',data:{labels:cats,datasets},
-    options:{responsive:true,maintainAspectRatio:false,indexAxis:horiz?'y':'x',animation:{duration:350},
-      interaction:{mode:'nearest',intersect:true},
-      plugins:{legend:{display:!single||datasets.length>1,position:'bottom',labels:{color:ink,boxWidth:12}},
-        tooltip:{callbacks:{label:c=>{const st=c.dataset._stats[c.dataIndex];let t=`${c.dataset.label}: ${fmt(m,st.v)}`;
-          if(st.den!=null)t+=`  (${st.num.toLocaleString()} / ${st.den.toLocaleString()})`;else if(st.n!=null)t+=`  (n = ${st.n.toLocaleString()})`;return t}}},
-        datalabels:{display:ctx=>{if(!state.labels)return false;const v=ctx.dataset.data[ctx.dataIndex];if(v==null)return false;if(stacked)return isPct(m)?v>=6:true;return series.length<=3&&cats.length<=14},
-          color:stacked?'#fff':ink,anchor:stacked?'center':'end',align:stacked?'center':(horiz?'right':'top'),font:{size:11,weight:'500'},
-          formatter:v=>isPct(m)?v.toFixed(isPct(m)&&stacked?0:1)+'%':(m.type==='count'?Math.round(v).toLocaleString():v.toFixed(1))}},
-      scales:{x:{stacked,ticks:{color:ink},grid:{color:horiz?line:'transparent'},...(horiz?valueAxis(m,stacked):{})},
-              y:{stacked,ticks:{color:ink},grid:{color:horiz?'transparent':line},...(horiz?{}:valueAxis(m,stacked))}},
-      onClick:(e,els)=>{if(!els.length)return;const el=els[0];const ds=chart.data.datasets[el.datasetIndex];if(ds.label==='Overall')return;showDrill(cats[el.index],series.length>1?ds.label:null)}}});
-}
-function valueAxis(m,stacked){const o={beginAtZero:true,ticks:{callback:v=>isPct(m)?v+'%':v}};if(m.type==='mix'&&stacked)o.max=100;else if(isPct(m))o.suggestedMax=Math.min(100,Math.ceil(((last.series.flatMap(s=>s.stats.map(x=>x.v||0)).reduce((a,b)=>Math.max(a,b),0))*100+8)/10)*10);return o}
-
-function renderGrid(r){
-  const{m,cats,series}=r,heat=state.type==='heatmap';
-  const all=series.flatMap(s=>s.stats.map(x=>x.v)).filter(v=>v!=null);const lo=Math.min(...all),hi=Math.max(...all);
-  const shade=v=>{if(v==null||!heat)return'';const t=hi>lo?(v-lo)/(hi-lo):.5;return`background:rgba(46,91,186,${(.08+t*.72).toFixed(2)});color:${t>.55?'#fff':'inherit'}`};
-  let h=`<table><thead><tr><th>${DS[state.ds].dims[state.group]}</th>${series.map(s=>`<th>${s.name}</th>`).join('')}${series.length>1?'<th>All</th>':''}<th>n</th></tr></thead><tbody>`;
-  cats.forEach((c,i)=>{const t=r.gt.get(c);h+=`<tr><td>${c}</td>${series.map(s=>{const st=s.stats[i];return`<td style="${shade(st.v)};cursor:pointer" data-c="${encodeURIComponent(c)}" data-s="${series.length>1?encodeURIComponent(s.name):''}" title="n = ${st.n??'–'}">${st.small?'<span class="small">n &lt; '+state.minN+'</span>':fmt(m,st.v)}</td>`}).join('')}${series.length>1&&m.type!=='mix'?`<td><b>${fmt(m,t.v)}</b></td>`:series.length>1?'<td>100%</td>':''}<td class="small">${(t.n??0).toLocaleString()}</td></tr>`});
-  h+=`</tbody><tfoot><tr><td><b>All filtered</b></td>${series.map(()=>'<td></td>').join('')}${series.length>1?'<td></td>':''}<td class="small">${r.overall.n.toLocaleString()}</td></tr></tfoot></table>`;
-  if(series.length===1)h=h.replace('<td></td><td class="small">'+r.overall.n.toLocaleString(),`<td><b>${fmt(m,r.overall.v)}</b></td><td class="small">${r.overall.n.toLocaleString()}`);
-  $('grid').innerHTML=h;
-  $('grid').querySelectorAll('td[data-c]').forEach(td=>td.onclick=()=>showDrill(decodeURIComponent(td.dataset.c),td.dataset.s?decodeURIComponent(td.dataset.s):null));
+// ---------- Overview ----------
+function renderOverview(){
+  const cards=M.KPIS.map(([ds,met])=>{
+    const seg=S.segment&&S.segment.ds===ds?S.segment:null;
+    const k=M.kpi(DATA,ds,met,S.filters,seg);
+    const on=S.ds===ds&&S.metric===met;
+    const b=k.stat.den!=null?`${k.stat.num.toLocaleString()} of ${k.stat.den.toLocaleString()}`:`n = ${k.stat.n.toLocaleString()}`;
+    return`<div class="kpi ${on?'on':''}" data-ds="${ds}" data-m="${met}"><div class="l">${esc(k.m.label)}</div><div class="v">${k.value}</div>
+      <div class="small">${b}${seg?` · segment only`:''}</div>${on?`<button class="btn primary" style="margin-top:10px;width:100%" id="share">Share finding</button>`:''}</div>`;
+  }).join('');
+  const d=M.DS[S.ds],m=d.metrics[S.metric];
+  $('main').innerHTML=`<div class="kpis">${cards}</div>
+    <div class="title">${esc(m.label)} over time</div>
+    <div class="small" style="margin:2px 0 10px">${esc(d.label)} by ${esc(d.dims[d.yearDim].toLowerCase())} · ${esc(M.describeFilters(S.ds,S.filters))}. Click a KPI card to select it; the selected one can be shared.</div>
+    <div class="chartbox" style="height:300px"><canvas id="cv"></canvas></div>`;
+  $('main').querySelectorAll('.kpi').forEach(c=>c.onclick=e=>{if(e.target.id==='share')return;const ds=c.dataset.ds;
+    set({ds,metric:c.dataset.m,group:M.DS[ds].dims[S.group]?S.group:Object.keys(M.DS[ds].dims)[0],segment:S.segment&&S.segment.ds===ds?S.segment:null})});
+  const sb=$('share');if(sb)sb.onclick=()=>openAction('share_finding');
+  if(m.type==='mix')return;
+  const r=M.compute(DATA,{...S,group:d.yearDim,split:'',sort:'natural',minN:0,topN:0});
+  drawChart(r,'line',{noClick:true});
 }
 
-function insight({d,m,overall,cats,gt,series}){
+// ---------- Segment ----------
+function renderSegment(){
+  const r=M.compute(DATA,S);
+  const{d,m,overall,cats,gt}=r;
   const valid=cats.filter(c=>gt.get(c).v!=null);
-  let t=`Across <b>${filtered().length.toLocaleString()}</b> ${d.label==='Success survey'?'respondents':d.label.toLowerCase()} in view, `;
-  if(m.type==='mix'){
-    const shares=DEFS.map(def=>[def,overall.n?filtered().filter(r=>r.primary_success_definition===def).length/overall.n:0]).sort((a,b)=>b[1]-a[1]);
-    const lc=x=>x==='IPO'?x:x.toLowerCase();t+=`<b>${lc(shares[0][0])}</b> is the most common definition of success (${(shares[0][1]*100).toFixed(1)}%), and <b>${lc(shares[3][0])}</b> the least (${(shares[3][1]*100).toFixed(1)}%).`;
-  } else {
-    t+=`${m.label.charAt(0).toLowerCase()+m.label.slice(1)} is <b>${fmt(m,overall.v)}</b>`;
-    if(overall.den!=null)t+=` (${overall.num.toLocaleString()} of ${overall.den.toLocaleString()})`;
-    t+='.';
-    if(valid.length>1&&m.type!=='count'&&m.type!=='sum'){
-      const s=[...valid].sort((a,b)=>gt.get(b).v-gt.get(a).v),hi=s[0],lo=s[s.length-1];
-      const gap=isPct(m)?((gt.get(hi).v-gt.get(lo).v)*100).toFixed(1)+' points':(gt.get(hi).v-gt.get(lo).v).toFixed(1)+(m.unit&&m.unit!=='M'?m.unit:'');
-      t+=` Highest: <b>${hi}</b> at ${fmt(m,gt.get(hi).v)}; lowest: <b>${lo}</b> at ${fmt(m,gt.get(lo).v)}, a gap of ${gap}.`;
-      const smallest=Math.min(...valid.map(c=>gt.get(c).n));
-      if(smallest<30)t+=` <span class="small">Some groups have fewer than 30 rows, so treat their values with caution.</span>`;
-    }
-  }
-  $('insight').innerHTML=t;
+  let ins=`${esc(m.label)} across <b>${r.rows.length.toLocaleString()}</b> ${d.noun}: <b>${M.fmt(m,overall.v)}</b>${overall.den!=null?` (${overall.num.toLocaleString()} of ${overall.den.toLocaleString()})`:''}.`;
+  if(valid.length>1&&!['count','sum','mix'].includes(m.type)){const s=[...valid].sort((a,b)=>gt.get(b).v-gt.get(a).v);ins+=` Highest <b>${esc(s[0])}</b> ${M.fmt(m,gt.get(s[0]).v)}, lowest <b>${esc(s.at(-1))}</b> ${M.fmt(m,gt.get(s.at(-1)).v)}.`}
+  $('main').innerHTML=`<div class="title">${esc(m.label)} by ${esc(d.dims[S.group].toLowerCase())}${S.split?' and '+esc(d.dims[S.split].toLowerCase()):''}</div>
+    <div class="insight">${ins}</div>
+    <div class="chartbox" id="cb"><canvas id="cv"></canvas></div><div id="grid"></div>
+    <div class="small" style="margin-top:8px">${m.note?esc(m.note)+' ':''}Click a bar to select that segment.</div><div id="selbox"></div>`;
+  if(S.type==='table'){$('cb').classList.add('hide');renderTable(r)}else drawChart(r,S.type);
+  renderSelection(r);
 }
-function foot({m,overall,d}){
-  let t=[];
-  if(state.ds==='startups'&&m.type==='rate'&&state.metric==='survival')t.push(`${(overall.excluded||0).toLocaleString()} startups excluded: their 36-month mark is after the Sept 2026 cut-off, so the outcome is not known yet.`);
-  if(m.note)t.push(m.note);
-  if(m.type==='rate')t.push('Rates are recomputed from numerator and denominator for every group, never averaged.');
-  if(m.type==='median')t.push('Medians are recomputed from the rows in each group.');
-  const nf=Object.values(F[state.ds]).filter(s=>s.size).length;if(nf)t.push(`${nf} filter${nf>1?'s':''} active.`);
-  t.push('Click any bar or cell for detail.');
-  $('foot').textContent=t.join(' ');
+function renderTable(r){
+  const{m,cats,series}=r;
+  $('grid').innerHTML=`<table><thead><tr><th>${esc(M.DS[S.ds].dims[S.group])}</th>${series.map(s=>`<th>${esc(s.name)}</th>`).join('')}<th>n</th></tr></thead><tbody>
+    ${cats.map((c,i)=>`<tr class="row ${S.segment&&S.segment.value===String(c)?'on':''}" data-c="${esc(c)}"><td>${esc(c)}</td>${series.map(s=>`<td>${s.stats[i].small?'–':M.fmt(m,s.stats[i].v)}</td>`).join('')}<td class="small">${(r.gt.get(c).n||0).toLocaleString()}</td></tr>`).join('')}</tbody></table>`;
+  $('grid').querySelectorAll('tr.row').forEach(t=>t.onclick=()=>set({segment:{ds:S.ds,group:S.group,value:t.dataset.c}}));
 }
-function showDrill(cat,splitVal){
-  const{d,m,rows,overall}=last;
-  let sub=rows.filter(r=>(r[state.group]==null?'(blank)':r[state.group])===cat);
-  if(splitVal!=null)sub=sub.filter(r=>(r[state.split]==null?'(blank)':r[state.split])===splitVal);
-  const st=stat(sub,m);const name=splitVal?`${cat} · ${splitVal}`:cat;
-  const k=[];
-  k.push([m.type==='mix'?'Share of group':m.label,m.type==='mix'?((sub.length/rows.filter(r=>(r[state.group]??'(blank)')===cat).length)*100).toFixed(1)+'%':fmt(m,st.v)]);
-  if(st.den!=null)k.push(['Numerator / denominator',`${st.num.toLocaleString()} / ${st.den.toLocaleString()}`]);
-  k.push(['Rows in group',sub.length.toLocaleString()]);
-  if(m.type!=='mix'&&m.type!=='count'&&m.type!=='sum'&&overall.v!=null&&st.v!=null){const diff=st.v-overall.v;k.push(['vs all in view',(diff>=0?'+':'')+(isPct(m)?(diff*100).toFixed(1)+' pts':diff.toFixed(1))])}
-  const EX={startups:[['runway','Median runway'],['survival','Survival'],['pmf','Median PMF']],decisions:[['payoff','Pay-off rate'],['raise','Raise close rate']],survey:[['ipo','Share choosing IPO'],['horizon','Avg horizon']]};
-  EX[state.ds].filter(([key])=>key!==state.metric).forEach(([key,l])=>{const mm=DS[state.ds].metrics[key];k.push([l,fmt(mm,stat(sub,mm).v)])});
-  const canFilter=DS[state.ds].filters.includes(state.group);
-  $('drill').innerHTML=`<div class="row" style="justify-content:space-between"><b>${name}</b><span>${canFilter?`<button class="linkbtn" id="keep">Filter to this group</button> · `:''}<button class="linkbtn" id="close">Close</button></span></div>
-    <div class="kpis">${k.map(([l,v])=>`<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('')}</div>`;
-  $('drill').classList.add('show');
-  $('close').onclick=()=>$('drill').classList.remove('show');
-  if(canFilter)$('keep').onclick=()=>{F[state.ds][state.group]=new Set([cat]);clearPreset();buildFilters();draw()};
+function renderSelection(r){
+  if(!S.segment){$('selbox').innerHTML='';return}
+  const k=M.kpi(DATA,S.ds,S.metric,S.filters,S.segment);
+  const gap=k.stat.v!=null&&k.all.v!=null?k.stat.v-k.all.v:null;
+  const recs=M.recordsFor(DATA,S).length;
+  $('selbox').innerHTML=`<div class="sel"><div class="row2"><div><b>${esc(M.describeSegment(S.ds,S.segment))}</b><div class="small">${esc(k.m.label)}: ${k.value}${k.stat.den!=null?` (${k.stat.num} of ${k.stat.den})`:''} · all filtered ${M.fmt(k.m,k.all.v)}${gap!=null?` · gap ${M.isPct(k.m)?(gap>=0?'+':'')+(gap*100).toFixed(1)+' pts':(gap>=0?'+':'')+gap.toFixed(1)}`:''}</div></div>
+    <div class="row2" style="gap:6px"><button class="btn" id="openrec" ${recs?'':'disabled'}>Open records (${recs.toLocaleString()})</button><button class="btn primary" id="assign">Assign investigation</button><button class="link" id="clrseg">Clear</button></div></div></div>`;
+  $('openrec').onclick=()=>set({view:'record',page:0});
+  $('assign').onclick=()=>openAction('assign_investigation');
+  $('clrseg').onclick=()=>set({segment:null});
 }
-function copyView(){
-  if(!last)return;const{m,cats,series,d}=last;
-  let t=$('title').textContent+'\n'+$('insight').innerText+'\n\n'+[d.dims[state.group],...series.map(s=>s.name)].join('\t')+'\n';
-  cats.forEach((c,i)=>{t+=[c,...series.map(s=>fmt(m,s.stats[i].v))].join('\t')+'\n'});
-  t+='\nSimulated data (seed 20261110).';
-  navigator.clipboard.writeText(t).then(()=>{$('copy').textContent='Copied';setTimeout(()=>$('copy').textContent='Copy view as text',1500)},()=>{$('copy').textContent='Copy not allowed here'});
+function drawChart(r,type,opt={}){
+  const{m,cats,series,overall}=r;
+  const horiz=type==='hbar',stacked=type==='stacked'||(m.type==='mix'&&type!=='line'),single=series.length===1;
+  const ink=getComputedStyle(document.body).color,line=getComputedStyle(document.documentElement).getPropertyValue('--line').trim()||'#ddd';
+  const pv=v=>v==null?null:(M.isPct(m)?+(v*100).toFixed(2):+v.toFixed(2));
+  const selIdx=S.segment&&S.segment.group===S.group?cats.findIndex(c=>String(c)===S.segment.value):-1;
+  const datasets=series.map((s,i)=>{const c=single?PAL[0]:PAL[i%PAL.length];
+    const col=cats.map((_,j)=>selIdx<0||j===selIdx||(S.segment.split&&s.name!==S.segment.splitValue&&false)?c:c+'55');
+    return{label:s.name,data:s.stats.map(x=>pv(x.v)),_stats:s.stats,backgroundColor:type==='line'?c:col,borderColor:c,borderWidth:type==='line'?2.5:0,borderRadius:type==='line'?0:4,tension:.25,pointRadius:type==='line'?4:0,spanGaps:true,type:type==='line'?'line':'bar'}});
+  if(!stacked&&!['mix','count','sum'].includes(m.type)&&overall.v!=null&&type!=='line'&&!horiz)
+    datasets.push({label:'All filtered',type:'line',data:cats.map(()=>pv(overall.v)),borderColor:'#888',borderDash:[6,5],borderWidth:1.5,pointRadius:0,_stats:cats.map(()=>overall),datalabels:{display:false}});
+  const va={beginAtZero:true,ticks:{color:ink,callback:v=>M.isPct(m)?v+'%':v},grid:{color:line}};if(m.type==='mix'&&stacked)va.max=100;
+  chart=new Chart($('cv'),{type:'bar',data:{labels:cats,datasets},options:{responsive:true,maintainAspectRatio:false,indexAxis:horiz?'y':'x',animation:{duration:300},
+    plugins:{legend:{display:!single||datasets.length>1,position:'bottom',labels:{color:ink,boxWidth:12}},
+      tooltip:{callbacks:{label:c=>{const st=c.dataset._stats[c.dataIndex];let t=`${c.dataset.label}: ${M.fmt(m,st.v)}`;if(st.den!=null)t+=` (${st.num} / ${st.den})`;else if(st.n!=null)t+=` (n = ${st.n})`;return t}}},
+      datalabels:{display:ctx=>{if(!S.labels)return false;const v=ctx.dataset.data[ctx.dataIndex];if(v==null)return false;return stacked?(M.isPct(m)?v>=6:true):series.length<=3&&cats.length<=14},
+        color:stacked?'#fff':ink,anchor:stacked?'center':'end',align:stacked?'center':(horiz?'right':'top'),font:{size:11,weight:'500'},formatter:v=>M.isPct(m)?v.toFixed(stacked?0:1)+'%':(m.type==='count'?Math.round(v).toLocaleString():v.toFixed(1))}},
+    scales:{x:{stacked,ticks:{color:ink},grid:{color:horiz?line:'transparent'},...(horiz?va:{})},y:{stacked,ticks:{color:ink},grid:{color:horiz?'transparent':line},...(horiz?{}:va)}},
+    onClick:(e,els)=>{if(opt.noClick||!els.length)return;const el=els[0],ds=chart.data.datasets[el.datasetIndex];if(ds.label==='All filtered')return;
+      const seg={ds:S.ds,group:S.group,value:String(cats[el.index])};if(series.length>1){seg.split=S.split;seg.splitValue=ds.label}set({segment:seg})}}});
 }
+
+// ---------- Record ----------
+const COLS=[['sector','Sector'],['stage','Stage'],['funding_type','Funding'],['outcome_36m','Outcome']];
+function renderRecord(){
+  if(S.ds==='survey'){$('main').innerHTML=`<div class="note warn">Survey respondents are anonymous, so there are no startup records behind them. Switch the dataset to Startups or Decisions.</div>`;return}
+  const rows=M.recordsFor(DATA,S);
+  const per=25,pages=Math.max(1,Math.ceil(rows.length/per)),page=Math.min(S.page||0,pages-1);
+  const slice=rows.slice(page*per,page*per+per);
+  const ed=Object.keys(BASE.editable);
+  const cell=(r,f)=>`<td class="${r._edits&&r._edits[f]?'edited':''}" title="${r._edits&&r._edits[f]?'Edited':''}">${M.fmtField(DATA,f,r[f])}</td>`;
+  $('main').innerHTML=`<div class="row2"><div><div class="title">Records</div><div class="small">${rows.length.toLocaleString()} startups · ${esc(M.describeFilters(S.ds,S.filters))}${S.segment?' · '+esc(M.describeSegment(S.ds,S.segment)):''}</div></div>
+    <div class="row2" style="gap:6px"><button class="btn" id="prev" ${page?'':'disabled'}>‹</button><span class="small">${page+1} / ${pages}</span><button class="btn" id="next" ${page<pages-1?'':'disabled'}>›</button></div></div>
+    <div style="overflow:auto;margin-top:8px"><table><thead><tr><th>Record</th>${COLS.map(([,l])=>`<th class="l">${l}</th>`).join('')}<th>Runway</th><th>Revenue / mo</th><th>PMF</th></tr></thead><tbody>
+    ${slice.map(r=>`<tr class="row ${S.record===r.id?'on':''}" data-id="${r.id}"><td>${r.id}</td>${COLS.map(([k])=>`<td class="l">${esc(r[k])}</td>`).join('')}${cell(r,'runway_months')}${cell(r,'mrr_usd')}${cell(r,'pmf_score_pct')}</tr>`).join('')}</tbody></table></div>
+    <div id="detail"></div>`;
+  $('prev').onclick=()=>set({page:page-1});$('next').onclick=()=>set({page:page+1});
+  $('main').querySelectorAll('tr.row').forEach(t=>t.onclick=()=>set({record:t.dataset.id}));
+  if(S.record)renderDetail(rows.some(r=>r.id===S.record));
+}
+async function renderDetail(inView){
+  const r=DATA.startups[M.recordIndex(S.record)];
+  const decs=DATA.decisions.filter(x=>x.startup_id===r.id);
+  const prof=[['Sector','sector'],['Stage','stage'],['Funding type','funding_type'],['Region','region'],['Founded','founded_year'],['Founder age band','founder_age_band'],['Prior founder outcome','prior_founder_outcome'],['Recommended fix','recommended_fix'],['Pivot signal','pivot_signal'],['Raise readiness','raise_readiness'],['36-month outcome','outcome_36m'],['Team size','team_size']];
+  const box=$('detail');
+  box.innerHTML=`<div class="sel" style="background:var(--card);border-color:var(--line)">
+    <div class="row2"><div class="title">${r.id}</div><div class="row2" style="gap:6px"><button class="btn" id="rep">Report data issue</button><button class="link" id="close">Close</button></div></div>
+    ${inView?'':'<div class="note warn">This record is outside the current filters or segment. It stays selected so you can keep working on it.</div>'}
+    <div class="grid">${prof.map(([l,k])=>`<div class="f"><div class="k">${l}</div><div class="val">${esc(r[k]??'–')}</div></div>`).join('')}</div>
+    <div class="t" style="margin-top:12px">Editable values</div>
+    <div class="grid">${Object.entries(BASE.editable).map(([f,def])=>`<div class="cell" data-f="${f}"><div class="k">${esc(def.label)}${r._edits&&r._edits[f]?' · <span class="badge">edited</span>':''}</div>
+      <div class="val">${M.fmtField(DATA,f,r[f])}</div><button class="link" data-edit="${f}">Edit</button></div>`).join('')}</div>
+    <div class="t" style="margin-top:12px">Decisions (${decs.length})</div>
+    <table><thead><tr><th class="l">Date</th><th class="l">Question</th><th class="l">Chose</th><th class="l">Evidence</th><th class="l">After 12 months</th></tr></thead><tbody>
+    ${decs.map(x=>`<tr><td class="l">${x.decision_year}</td><td class="l">${esc(x.decision_type)}</td><td class="l">${esc(x.option_chosen)}</td><td class="l">${esc(x.evidence_basis)}</td><td class="l">${esc(x.outcome_12m)}</td></tr>`).join('')}</tbody></table>
+    <div class="t" style="margin-top:14px">Audit trail</div><div id="audit" class="small">Loading…</div></div>`;
+  $('close').onclick=()=>set({record:null});
+  $('rep').onclick=()=>openAction('report_issue',{record_id:r.id});
+  box.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editCell(r,b.dataset.edit));
+  if(!(SRV.ok&&SRV.configured&&SRV.configured.storage)){$('audit').textContent='Audit trail is available once the server is configured.';return}
+  const a=await api('edits?record_id='+r.id);
+  if(S.record!==r.id||!$('audit'))return;
+  if(a.status!==200){$('audit').textContent=a.error||'Could not load the audit trail.';return}
+  AUDIT=a;
+  const lbl=f=>BASE.editable[f]?BASE.editable[f].label:f;
+  $('audit').innerHTML=(a.history.length?`<ul class="audit">${a.history.map(h=>`<li>#${h.id} · ${h.created_at.slice(0,16).replace('T',' ')} · <b>${esc(lbl(h.field))}</b> ${M.fmtField(DATA,h.field,h.old_value)} → ${M.fmtField(DATA,h.field,h.new_value)} · "${esc(h.reason)}" <button class="link" data-audit="${h.id}">Report issue</button></li>`).join('')}</ul>`:'No edits yet.')
+    +(a.issues.length?`<div class="t" style="margin-top:10px">Reported issues</div><ul class="audit">${a.issues.map(i=>`<li>#${i.id} · ${i.severity} · ${esc(i.description)}${i.audit_edit_id?` (on edit #${i.audit_edit_id})`:''}</li>`).join('')}</ul>`:'');
+  $('audit').querySelectorAll('[data-audit]').forEach(b=>b.onclick=()=>openAction('report_issue',{record_id:r.id,audit_edit_id:Number(b.dataset.audit)}));
+}
+function editCell(r,f){
+  const def=BASE.editable[f],cell=document.querySelector(`.cell[data-f="${f}"]`);
+  cell.innerHTML=`<div class="k">${esc(def.label)} (${def.min}–${def.max} ${def.unit})</div>
+    <input type="number" step="any" id="nv" value="${r[f]??''}" min="${def.min}" max="${def.max}">
+    <input type="text" id="why" placeholder="Reason (required)" style="margin-top:6px"><div id="everr"></div>
+    <div class="row2" style="margin-top:6px"><button class="link" id="cancel">Cancel</button><button class="btn primary" id="review">Review change</button></div>`;
+  $('nv').focus();
+  $('cancel').onclick=render;
+  $('review').onclick=()=>{
+    const nv=$('nv').value,why=$('why').value.trim();
+    const err=nv===''||!Number.isFinite(+nv)?'Enter a number.':(+nv<def.min||+nv>def.max)?`Must be between ${def.min} and ${def.max}.`:why.length<3?'Add a reason (3+ characters).':(+nv===r[f])?'Same as the current value.':null;
+    if(err){$('everr').innerHTML=`<div class="note bad">${err}</div>`;return}
+    openAction('edit_record',{record_id:r.id,field:f,new_value:+nv,reason:why,expected_old:r[f]});
+  };
+}
+
+// ---------- actions: compose → exact preview → confirm → verify ----------
+function openModal(html){$('modal').innerHTML=html;$('mbg').classList.add('show');$('modal').querySelectorAll('[data-close]').forEach(b=>b.onclick=closeModal)}
+function closeModal(){$('mbg').classList.remove('show')}
+$('mbg').onclick=e=>{if(e.target.id==='mbg')closeModal()};
+const TITLES={share_finding:'Share finding',assign_investigation:'Assign investigation',edit_record:'Edit record value',report_issue:'Report data issue'};
+function defaults(action,extra){
+  const d=M.DS[S.ds],k=M.kpi(DATA,S.ds,S.metric,S.filters,S.segment&&S.segment.ds===S.ds?S.segment:null);
+  if(action==='share_finding')return{subject:`Finding: ${k.m.label} is ${k.value}`,note:`${k.m.label} is ${k.value} for ${S.segment?M.describeSegment(S.ds,S.segment):'the current view'}. Details below.`};
+  if(action==='assign_investigation'){const due=new Date(Date.now()+7*864e5).toISOString().slice(0,10);
+    return{subject:`Please investigate: ${M.describeSegment(S.ds,S.segment)}`,note:`Can you look into why ${M.describeSegment(S.ds,S.segment)} sits at ${k.value} on ${k.m.label.toLowerCase()}? Numbers below.`,due}}
+  if(action==='report_issue')return{subject:`Data issue on ${extra.record_id}${extra.audit_edit_id?` (edit #${extra.audit_edit_id})`:''}`,note:'',to:SRV.data_owner||''};
+  return{};
+}
+let ACT=null;
+function openAction(action,extra={}){
+  const blocker=actionsReady(action==='edit_record'?'storage':'email');
+  if(blocker){openModal(`<h2>${TITLES[action]}</h2><div class="note warn">${esc(blocker)}</div><div class="row2" style="justify-content:flex-end"><button class="btn" data-close>Close</button>${!SRV.authed&&SRV.ok?'<button class="btn primary" id="gou">Unlock</button>':''}</div>`);
+    const g=$('gou');if(g)g.onclick=()=>{closeModal();$('unlock').click()};return}
+  const snap=JSON.parse(JSON.stringify(S));
+  ACT={action,extra,state:snap,form:{...defaults(action,extra),...(ACT&&ACT.action===action&&ACT.keep?ACT.form:{})}};
+  action==='edit_record'?preview():compose();
+}
+function compose(){
+  const{action,form}=ACT,email=action!=='edit_record';
+  const recips=(SRV.recipients||[]).filter(x=>!x.startsWith('@'));
+  openModal(`<h2>${TITLES[action]}</h2><div class="small" style="margin-bottom:10px">${esc(contextLine())}</div>
+    ${email?`<div class="ctl"><label class="t" for="to">${action==='assign_investigation'?'Assign to (email)':'To'}</label><input type="text" id="to" list="rl" value="${esc(form.to||'')}" placeholder="name@company.com, other@company.com">
+      <datalist id="rl">${recips.map(x=>`<option value="${esc(x)}">`).join('')}</datalist><div class="small">Allowed: ${esc((SRV.recipients||[]).join(', ')||'set ALLOWED_RECIPIENTS on the server')}</div></div>`:''}
+    ${action==='assign_investigation'?`<div class="ctl"><label class="t" for="due">Due date</label><input type="date" id="due" value="${esc(form.due||'')}"></div>`:''}
+    ${action==='report_issue'?`<div class="ctl"><label class="t" for="sev">Severity</label><select id="sev">${['low','medium','high'].map(s=>`<option ${form.severity===s?'selected':''}>${s}</option>`).join('')}</select></div>
+      <div class="ctl"><label class="t" for="desc">What is wrong</label><textarea id="desc" placeholder="Describe the issue">${esc(form.description||'')}</textarea></div>`:''}
+    ${email?`<div class="ctl"><label class="t" for="subj">Subject</label><input type="text" id="subj" value="${esc(form.subject||'')}"></div>
+      <div class="ctl"><label class="t" for="note">Message</label><textarea id="note">${esc(form.note||'')}</textarea><div class="small">The numbers are added by the server from the live data, so they always match the dashboard.</div></div>`:''}
+    <div id="aerr"></div><div class="row2" style="justify-content:flex-end;margin-top:8px"><button class="btn" data-close>Cancel</button><button class="btn primary" id="pv">Preview</button></div>`);
+  $('pv').onclick=()=>{
+    const v=id=>$(id)?$(id).value:undefined;
+    Object.assign(ACT.form,{to:v('to'),subject:v('subj'),note:v('note'),due:v('due'),severity:v('sev'),description:v('desc')});
+    preview();
+  };
+}
+function contextLine(){
+  const s=ACT.state,x=ACT.extra;
+  if(ACT.action==='share_finding')return`Selected KPI: ${M.DS[s.ds].metrics[s.metric].label} · ${M.describeFilters(s.ds,s.filters)}${s.segment&&s.segment.ds===s.ds?' · '+M.describeSegment(s.ds,s.segment):''}`;
+  if(ACT.action==='assign_investigation')return`Selected bar: ${M.describeSegment(s.ds,s.segment)} · ${M.DS[s.ds].metrics[s.metric].label}`;
+  if(ACT.action==='report_issue')return`Record ${x.record_id}${x.audit_edit_id?` · audit entry #${x.audit_edit_id}`:''}`;
+  return`Record ${x.record_id} · ${BASE.editable[x.field].label}`;
+}
+function payload(){
+  const f=ACT.form,x=ACT.extra;
+  const p={action:ACT.action,dataset_version:BASE.version,state:ACT.state,...x};
+  if(ACT.action!=='edit_record')p.message={to:(f.to||'').split(/[,;\s]+/).filter(Boolean),subject:f.subject||'',note:f.note||''};
+  if(ACT.action==='assign_investigation')p.due=f.due;
+  if(ACT.action==='report_issue'){p.severity=f.severity||'low';p.description=f.description||''}
+  return p;
+}
+async function preview(){
+  openModal(`<h2>${TITLES[ACT.action]}</h2><div class="small">Preparing the exact preview…</div>`);
+  const r=await api('preview',{method:'POST',body:payload()});
+  if(r.status!==200)return failed(r,true);
+  ACT.hash=r.preview_hash;showPreview(r.preview);
+}
+function showPreview(pv,warn){
+  const e=pv.email,c=pv.change;
+  openModal(`<h2>${TITLES[ACT.action]} — preview</h2><div class="small" style="margin-bottom:8px">${esc(contextLine())}</div>
+    ${warn?`<div class="note warn">${esc(warn)}</div>`:''}
+    ${c?`<div class="kv"><div>Record</div><div><b>${c.record}</b></div><div>Field</div><div>${esc(c.field)}</div><div>Change</div><div><b>${esc(c.from)} → ${esc(c.to)}</b></div><div>Reason</div><div>${esc(c.reason)}</div>${c.impact?`<div>Effect</div><div>${esc(c.impact)}</div>`:''}</div>
+      <div class="small">This is saved to the audit trail with your reason. It does not send email.</div>`:''}
+    ${e?`<div class="kv"><div>From</div><div>${esc(e.from)}</div><div>To</div><div>${esc(e.to.join(', '))}</div><div>Subject</div><div><b>${esc(e.subject)}</b></div></div>
+      <pre class="email">${esc(e.text)}</pre><div class="small">This is exactly what will be sent.</div>`:''}
+    <div id="aerr"></div><div class="row2" style="justify-content:flex-end;margin-top:12px;gap:8px"><button class="btn" id="back">Back to edit</button>
+      <button class="btn primary" id="go">${ACT.action==='edit_record'?'Save edit':ACT.action==='report_issue'?'Save and send':'Send email'}</button></div>`);
+  $('back').onclick=()=>{if(ACT.action==='edit_record'){closeModal();editCell(DATA.startups[M.recordIndex(ACT.extra.record_id)],ACT.extra.field);$('nv').value=ACT.extra.new_value;$('why').value=ACT.extra.reason}else compose()};
+  $('go').onclick=commit;
+}
+async function commit(){
+  $('go').disabled=true;$('go').textContent='Working…';
+  const r=await api('commit',{method:'POST',body:{...payload(),preview_hash:ACT.hash,confirm:true}});
+  if(r.status===409&&r.preview_hash){ACT.hash=r.preview_hash;return showPreview(r.preview,r.error)}
+  if(r.status!==200)return failed(r,false);
+  if(['edit_record','report_issue'].includes(ACT.action)){const e=await api('edits');if(e.status===200)DATA=M.applyEdits(BASE,e.edits)}
+  openModal(`<h2>${TITLES[ACT.action]} — done</h2><ul class="checks">${r.checks.map(c=>`<li class="${c.ok?'y':'n'}">${c.ok?'✓':'✗'} ${esc(c.label)}</li>`).join('')}</ul>
+    ${r.to?`<div class="small">Sent to ${esc(r.to.join(', '))}.</div>`:''}<div class="row2" style="justify-content:flex-end;margin-top:10px"><button class="btn primary" data-close>Done</button></div>`);
+  ACT=null;render();
+}
+function failed(r,fromPreview){
+  const box=$('aerr')||$('modal');
+  const html=`<div class="note bad">${esc(r.error||'Something went wrong.')}</div>${r.checks?`<ul class="checks">${r.checks.map(c=>`<li class="${c.ok?'y':'n'}">${c.ok?'✓':'✗'} ${esc(c.label)}</li>`).join('')}</ul>`:''}
+    ${r.reload?'<button class="btn primary" onclick="location.reload()">Reload</button>':''}`;
+  if($('aerr'))$('aerr').innerHTML=html;
+  else openModal(`<h2>${TITLES[ACT.action]}</h2>${html}<div class="row2" style="justify-content:flex-end;margin-top:8px"><button class="btn" id="back2">Back to edit</button></div>`);
+  const b=$('back2');if(b)b.onclick=()=>{ACT.action==='edit_record'?closeModal():compose()};
+  if($('go')){$('go').disabled=false;$('go').textContent='Try again'}
+}
+
+// ---------- boot ----------
+fetch('data.json').then(r=>r.json()).then(async j=>{
+  BASE=M.loadData(j);DATA=BASE;sanitize();
+  await loadServer();render();
+}).catch(e=>{$('main').innerHTML=`<div class="note bad">Could not load data.json: ${esc(e)}</div>`});
 </script>
 </body>
 </html>

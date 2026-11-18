@@ -1,0 +1,53 @@
+{
+  "version": "07d286fdcf78cee0",
+  "counts": {
+    "startups": 3000,
+    "decisions": 6000,
+    "survey": 2000
+  },
+  "record_id": {
+    "prefix": "S",
+    "width": 5,
+    "first": 1,
+    "last": 3000
+  },
+  "editable": {
+    "runway_months": {
+      "min": 0,
+      "max": 60,
+      "unit": "months",
+      "label": "Runway"
+    },
+    "mrr_usd": {
+      "min": 0,
+      "max": 50000000,
+      "unit": "USD",
+      "label": "Monthly revenue"
+    },
+    "mom_growth_pct": {
+      "min": -100,
+      "max": 500,
+      "unit": "%",
+      "label": "Monthly growth"
+    },
+    "monthly_churn_pct": {
+      "min": 0,
+      "max": 100,
+      "unit": "%",
+      "label": "Monthly churn"
+    },
+    "pmf_score_pct": {
+      "min": 0,
+      "max": 100,
+      "unit": "%",
+      "label": "PMF score"
+    },
+    "ltv_cac_ratio": {
+      "min": 0,
+      "max": 100,
+      "unit": "x",
+      "label": "LTV / CAC"
+    }
+  },
+  "source": "Synthetic. generate_startup_dataset.py, seed 20261110, cut-off 2026-09-30"
+}

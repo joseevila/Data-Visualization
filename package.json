@@ -1,0 +1,7 @@
+{
+  "name": "startup-decision-maker",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": { "test": "node scripts/test_api.mjs" }
+}
